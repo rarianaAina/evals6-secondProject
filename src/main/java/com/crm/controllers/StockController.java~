@@ -1,0 +1,38 @@
+package com.boulangerie.controllers;
+
+import com.boulangerie.services.StockService;
+import com.boulangerie.services.IngredientService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
+import java.math.BigDecimal;
+
+@Controller
+@RequestMapping("/stock")
+public class StockController {
+    @Autowired
+    private StockService stockService;
+    
+    @Autowired
+    private IngredientService ingredientService;
+    
+    @GetMapping("/dashboard")
+    public String dashboard(Model model) {
+        model.addAttribute("statistiques", stockService.getStatistiquesStock());
+        model.addAttribute("ingredientsEnAlerte", ingredientService.getIngredientsEnAlerte());
+        return "stock/dashboard";
+    }
+    
+    @PostMapping("/ajuster/{id}")
+    public String ajusterStock(@PathVariable Long id, @RequestParam BigDecimal quantite) {
+        stockService.ajusterStock(id, quantite);
+        return "redirect:/stock/dashboard";
+    }
+    
+    @GetMapping("/mouvements")
+    public String mouvementsStock(Model model) {
+        // Affichage des mouvements de stock
+        return "stock/mouvements";
+    }
+}

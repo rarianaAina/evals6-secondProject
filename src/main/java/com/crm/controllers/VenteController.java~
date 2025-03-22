@@ -1,0 +1,155 @@
+package com.boulangerie.controllers;
+
+import com.boulangerie.entities.Produit;
+import com.boulangerie.entities.Vente;
+import com.boulangerie.entities.LigneVente;
+import com.boulangerie.services.VenteService;
+import com.boulangerie.services.ProduitService;
+import com.boulangerie.services.ClientService;
+import com.boulangerie.services.VendeurService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.util.Collections;
+import java.util.List;
+
+@Controller
+@RequestMapping("/ventes")
+public class VenteController {
+    @Autowired
+    private VenteService venteService;
+
+    @Autowired
+    private ProduitService produitService;
+
+    @Autowired
+    private ClientService clientService;
+
+    @Autowired
+    private VendeurService vendeurService;
+
+    @GetMapping("/nouvelle")
+    public String nouvelleVente(Model model) {
+        model.addAttribute("produits", produitService.getAllProduits());
+        model.addAttribute("clients", clientService.getAllClients());
+        model.addAttribute("vendeurs", vendeurService.getAllVendeurs());
+        return "ventes/form";
+    }
+
+    @PostMapping("/effectuer")
+    @ResponseBody
+    public Vente effectuerVente(@RequestBody VenteRequest request) {
+        return venteService.effectuerVente(
+                request.getLignesVente(),
+                request.getClientId(),
+                request.getVendeurId(),
+                request.getModePaiement(),
+                request.getDateVente()
+        );
+    }
+
+/*    @GetMapping("/recherche")
+    public String rechercheVentes(
+            Model model,
+            @RequestParam(required = false) LocalDate date,
+            @RequestParam(required = false) String nomProduit,
+            @RequestParam(required = false) String categorie,
+            @RequestParam(required = false) Double prixMin,
+            @RequestParam(required = false) Double prixMax
+    ) {
+        LocalDate dateDebut = null;
+        LocalDate dateFin = null;
+
+        if (date != null) {
+            dateDebut = LocalDate.from(date.atStartOfDay());
+            dateFin = LocalDate.from(date.atTime(LocalTime.MAX));
+        }
+
+        // Remplacer les nulls par des valeurs explicites pour éviter les erreurs
+        String nomProduitParam = (nomProduit != null && !nomProduit.isBlank()) ? nomProduit : null;
+        String categorieParam = (categorie != null && !categorie.isBlank()) ? categorie : null;
+        Double prixMinParam = (prixMin != null) ? prixMin : null;
+        Double prixMaxParam = (prixMax != null) ? prixMax : null;
+
+        // Appel du service
+        List<Vente> ventes = venteService.rechercheVentesAvancee(
+                dateDebut,
+                dateFin,
+                nomProduitParam,
+                categorieParam,
+                prixMinParam,
+                prixMaxParam
+        );
+
+        model.addAttribute("ventes", ventes);
+        return "ventes/recherche";
+    }*/
+
+    @GetMapping("/recherche")
+    public String afficherRecherche(
+            @RequestParam(required = false) LocalDate dateDebut,
+            @RequestParam(required = false) LocalDate dateFin,
+            @RequestParam(required = false) String nomProduit,
+            @RequestParam(required = false) String categorie,
+            @RequestParam(required = false) Double prixMin,
+            @RequestParam(required = false) Double prixMax,
+            Model model
+    ) {
+        // Vérifiez si une recherche est déclenchée
+        boolean rechercheEffectuee = dateDebut != null || dateFin != null || nomProduit != null || categorie != null || prixMin != null || prixMax != null;
+
+        Produit.CategorieProduit categorieProduitEnum = null;
+
+        // Convertir le paramètre de catégorie en énumération, si nécessaire
+        if (categorie != null && !categorie.isEmpty()) {
+            try {
+                categorieProduitEnum = Produit.CategorieProduit.valueOf(categorie.toUpperCase());
+            } catch (IllegalArgumentException e) {
+                // Si la conversion échoue, retourner une erreur ou ignorer le filtre
+                model.addAttribute("erreurCategorie", "Catégorie invalide : " + categorie);
+                model.addAttribute("ventes", Collections.emptyList());
+                return "ventes/recherche";
+            }
+        }
+
+        // Appeler le service avec les paramètres
+        List<Vente> ventes = rechercheEffectuee
+                ? venteService.rechercheVentesAvancee(dateDebut, dateFin, nomProduit, String.valueOf(categorieProduitEnum), prixMin, prixMax)
+                : Collections.emptyList();
+
+        // Ajouter les résultats et l'état au modèle
+        model.addAttribute("ventes", ventes);
+        model.addAttribute("rechercheEffectuee", rechercheEffectuee);
+
+        return "ventes/recherche";
+    }
+
+}
+
+class VenteRequest {
+    private List<LigneVente> lignesVente;
+    private Long clientId;
+    private Long vendeurId;
+    private Vente.ModePaiement modePaiement;
+    private LocalDateTime dateVente;
+
+    // Getters et setters
+    public List<LigneVente> getLignesVente() { return lignesVente; }
+    public void setLignesVente(List<LigneVente> lignesVente) { this.lignesVente = lignesVente; }
+
+    public Long getClientId() { return clientId; }
+    public void setClientId(Long clientId) { this.clientId = clientId; }
+
+    public Long getVendeurId() { return vendeurId; }
+    public void setVendeurId(Long vendeurId) { this.vendeurId = vendeurId; }
+
+    public Vente.ModePaiement getModePaiement() { return modePaiement; }
+    public void setModePaiement(Vente.ModePaiement modePaiement) { this.modePaiement = modePaiement; }
+
+    public LocalDateTime getDateVente() { return dateVente; }
+    public void setDateVente(LocalDateTime dateVente) { this.dateVente = dateVente; }
+}

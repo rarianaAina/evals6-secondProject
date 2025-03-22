@@ -1,0 +1,13 @@
+spring.application.name=boulangerie
+spring.datasource.url=jdbc:postgresql://localhost:5432/boulanger
+spring.datasource.username=postgres
+spring.datasource.password=rariana
+spring.jpa.hibernate.ddl-auto=update
+spring.jpa.show-sql=true
+spring.datasource.driver-class-name=org.postgresql.Driver
+spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.PostgreSQLDialect
+
+spring.mvc.view.prefix=/WEB-INF/jsp/
+spring.mvc.view.suffix=.jsp
+
+server.port=8080
