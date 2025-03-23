@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Dashboard</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+<div class="dashboard">
+    <h1>Dashboard</h1>
+
+    <!-- Summary Cards -->
+    <div class="summary-cards">
+        <div class="card" th:onclick="'window.location.href=\'/dashboard/list/clients\''">
+            <h3>Total Clients</h3>
+            <p th:text="${data.totalClients}"></p>
+        </div>
+        <div class="card" th:onclick="'window.location.href=\'/dashboard/list/projects\''">
+            <h3>Total Projects</h3>
+            <p th:text="${data.totalProjects}"></p>
+        </div>
+        <div class="card" th:onclick="'window.location.href=\'/dashboard/list/tasks\''">
+            <h3>Total Tasks</h3>
+            <p th:text="${data.totalTasks}"></p>
+        </div>
+        <div class="card" th:onclick="'window.location.href=\'/dashboard/list/invoices\''">
+            <h3>Total Invoices</h3>
+            <p th:text="${data.totalInvoiceAmount}"></p>
+        </div>
+        <div class="card" th:onclick="'window.location.href=\'/dashboard/list/payments\''">
+            <h3>Total Payments</h3>
+            <p th:text="${data.totalPaymentAmount}"></p>
+        </div>
+        <div class="card" th:onclick="'window.location.href=\'/dashboard/list/offers\''">
+            <h3>Total Offers</h3>
+            <p th:text="${data.totalOffers}"></p>
+        </div>
+    </div>
+
+    <!-- Global Discount Rate -->
+    <div class="discount-rate">
+        <h3>Global Discount Rate: <span th:text="${data.globalDiscountRate * 100 + '%'}"></span></h3>
+    </div>
+
+    <!-- Charts -->
+    <div class="charts">
+        <div class="chart-container">
+            <canvas id="projectStatusChart"></canvas>
+        </div>
+        <div class="chart-container">
+            <canvas id="invoicePaymentChart"></canvas>
+        </div>
+        <div class="chart-container">
+            <canvas id="taskProgressChart"></canvas>
+        </div>
+    </div>
+</div>
+
+<script th:inline="javascript">
+    // Get data from Thymeleaf
+    const dashboardData = /*[[${data}]]*/ {};
+
+    // Project Status Chart
+    new Chart(document.getElementById('projectStatusChart'), {
+        type: 'pie',
+        data: {
+            labels: ['Active', 'Completed', 'On Hold'],
+            datasets: [{
+                data: [
+                    dashboardData.projects.filter(p => !p.closed).length,
+                    dashboardData.projects.filter(p => p.closed).length,
+                    dashboardData.projects.filter(p => p.status?.title === 'On Hold').length
+                ],
+                backgroundColor: ['#36A2EB', '#4BC0C0', '#FF6384']
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                title: {
+                    display: true,
+                    text: 'Project Status Distribution'
+                }
+            }
+        }
+    });
+
+    // Invoice vs Payment Chart
+    new Chart(document.getElementById('invoicePaymentChart'), {
+        type: 'bar',
+        data: {
+            labels: ['Invoices', 'Payments', 'Outstanding'],
+            datasets: [{
+                label: 'Amount',
+                data: [
+                    dashboardData.totalInvoiceAmount,
+                    dashboardData.totalPaymentAmount,
+                    dashboardData.outstandingAmount
+                ],
+                backgroundColor: ['#36A2EB', '#4BC0C0', '#FF6384']
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                title: {
+                    display: true,
+                    text: 'Financial Overview'
+                }
+            }
+        }
+    });
+
+    // Task Progress Chart
+    new Chart(document.getElementById('taskProgressChart'), {
+        type: 'doughnut',
+        data: {
+            labels: ['Completed', 'In Progress', 'Pending'],
+            datasets: [{
+                data: [
+                    dashboardData.tasks.filter(t => t.closed).length,
+                    dashboardData.tasks.filter(t => !t.closed && t.status?.title === 'In Progress').length,
+                    dashboardData.tasks.filter(t => !t.closed && t.status?.title === 'Pending').length
+                ],
+                backgroundColor: ['#4BC0C0', '#36A2EB', '#FF6384']
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                title: {
+                    display: true,
+                    text: 'Task Progress Overview'
+                }
+            }
+        }
+    });
+</script>
+</body>
+</html>
