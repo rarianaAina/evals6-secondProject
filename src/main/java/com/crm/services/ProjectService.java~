@@ -1,0 +1,36 @@
+package com.crm.services;
+
+import com.crm.entities.Project;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
+
+import java.util.List;
+
+@Service
+public class ProjectService extends BaseApiService {
+
+    public ProjectService(
+            RestTemplate restTemplate,
+            @Value("${api.laravel.url}") String apiUrl) {
+        super(restTemplate, apiUrl);
+    }
+
+    public List<Project> getAllProjects() {
+        return fetchData("/projects", new ParameterizedTypeReference<List<Project>>() {});
+    }
+
+    public Project getProjectById(Long id) {
+        return fetchSingleData("/projects/" + id, Project.class);
+    }
+
+    public void updateProject(Project project) {
+        restTemplate.put(apiUrl + "/projects/" + project.getId(), project);
+    }
+
+    public void deleteProject(Long projectId) {
+        restTemplate.delete(apiUrl + "/projects/" + projectId);
+    }
+}
+

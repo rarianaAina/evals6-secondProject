@@ -1,0 +1,33 @@
+package com.crm.entities;
+
+import jakarta.persistence.Column;
+import lombok.Data;
+import java.time.LocalDateTime;
+import java.util.List;
+
+@Data
+public class Project {
+    private Long id;
+    private String title;
+    private String description;
+    private String externalId;
+
+    @Column(name = "status_id")
+    private Long statusId;
+
+    private Long userAssignedId;
+    private Long userCreatedId;
+    private Long clientId;
+    private LocalDateTime deadline;
+    
+    private Client client;
+    private List<Task> tasks;
+    private User creator;
+    private User assignee;
+    private Status status;
+    
+    public boolean isClosed() {
+        System.out.println(status);
+        return status != null && "Closed".equals(status.getTitle());
+    }
+}

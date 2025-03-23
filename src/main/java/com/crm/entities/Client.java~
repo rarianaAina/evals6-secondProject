@@ -1,0 +1,27 @@
+package com.crm.entities;
+
+import lombok.Data;
+import java.util.List;
+
+@Data
+public class Client {
+    private Long id;
+    private String externalId;
+    private String name;
+    private String company_naame;
+    private String vat;
+    private String email;
+    private String address;
+    private String zipcode;
+    private String city;
+    private String primaryNumber;
+    private String secondaryNumber;
+    private Long industryId;
+    private String companyType;
+    private Long userId;
+    private String clientNumber;
+    
+    private List<Project> projects;
+    private List<Invoice> invoices;
+    private List<Task> tasks;
+}

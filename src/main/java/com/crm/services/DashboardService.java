@@ -146,7 +146,7 @@ public class DashboardService {
 
     private Map<String, Object> getClientDisplayFields(Client client) {
         Map<String, Object> fields = new HashMap<>();
-        fields.put("Company Name", client.getCompanyName());
+        fields.put("Company Name", client.getCompany_name());
         fields.put("Contact", client.getName());
         fields.put("Email", client.getEmail());
         fields.put("Phone", client.getPrimaryNumber());

@@ -36,7 +36,7 @@
             <h2>Payment Details</h2>
             <div class="info-group">
                 <label>Client:</label>
-                <span th:text="${data.clientName}"></span>
+                <span th:text="${data.clientId}"></span>
             </div>
             <div class="info-group">
                 <label>Amount:</label>
