@@ -37,10 +37,17 @@
         </div>
     </div>
 
-    <!-- Global Discount Rate -->
-    <div class="discount-rate">
-        <h3>Global Discount Rate: <span th:text="${data.globalDiscountRate * 100 + '%'}"></span></h3>
+    <div class="settings-form">
+        <form th:action="@{/dashboard/settings/discount}" method="post">
+            <label>Global Discount Rate (%):
+                <input type="number" step="0.01" min="0" max="100"
+                       name="rate"
+                       th:value="${data.globalDiscountRate * 100}" required/>
+            </label>
+            <button type="submit" class="btn btn-primary">Update Rate</button>
+        </form>
     </div>
+
 
     <!-- Charts -->
     <div class="charts">
@@ -61,17 +68,19 @@
     const dashboardData = /*[[${data}]]*/ {};
 
     // Project Status Chart
+    const projectStatusData = dashboardData.projectStatusCount;
+
+    // Extraire les labels et les valeurs
+    const labels = Object.keys(projectStatusData);
+    const values = Object.values(projectStatusData);
+
     new Chart(document.getElementById('projectStatusChart'), {
         type: 'pie',
         data: {
-            labels: ['Active', 'Completed', 'On Hold'],
+            labels: labels, // Labels dynamiques selon les statuts en base
             datasets: [{
-                data: [
-                    dashboardData.projects.filter(p => !p.closed).length,
-                    dashboardData.projects.filter(p => p.closed).length,
-                    dashboardData.projects.filter(p => p.status?.title === 'On Hold').length
-                ],
-                backgroundColor: ['#36A2EB', '#4BC0C0', '#FF6384']
+                data: values, // Nombre de projets par statut
+                backgroundColor: ['#36A2EB', '#4BC0C0', '#FF6384', '#FFCE56', '#9966FF'] // Ajoute d'autres couleurs si besoin
             }]
         },
         options: {
