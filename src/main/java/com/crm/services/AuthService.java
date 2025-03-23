@@ -3,6 +3,7 @@ package com.crm.services;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.client.HttpClientErrorException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -24,7 +25,17 @@ public class AuthService {
 
         HttpEntity<Map<String, String>> request = new HttpEntity<>(requestBody, headers);
 
-        return restTemplate.exchange(url, HttpMethod.POST, request, String.class);
+        try {
+            // Essaye d'effectuer la requête POST
+            return restTemplate.exchange(url, HttpMethod.POST, request, String.class);
+        } catch (HttpClientErrorException e) {
+            // Si une erreur 401 est lancée, retourne un status d'erreur avec le message d'erreur
+            if (e.getStatusCode() == HttpStatus.UNAUTHORIZED) {
+                return new ResponseEntity<>("Identifiants incorrects", HttpStatus.UNAUTHORIZED);
+            }
+            // Dans le cas d'une autre erreur, renvoyer l'erreur générique
+            return new ResponseEntity<>("Erreur de connexion", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     public ResponseEntity<String> logout(String token) {
