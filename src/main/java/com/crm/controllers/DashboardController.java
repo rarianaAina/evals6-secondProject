@@ -52,10 +52,6 @@ public class DashboardController {
         var tasks = taskService.getAllTasks();
         var offers = offersService.getAllOffers();
 
-        System.out.println(projects.size());
-        for (var task : tasks) {
-            System.out.println("Tasks: " + task);
-        }
 
         // Calcul des totaux
         data.put("totalClients", clients.size());
@@ -65,6 +61,7 @@ public class DashboardController {
         data.put("totalPayments", payments.size());
         data.put("totalOffers", offers.size());
 
+        System.out.println("Offres : " + offers);
         // Calcul des métriques financières
         BigDecimal totalInvoiceAmount = invoices.stream()
                 .flatMap(invoice -> invoice.getInvoiceLines().stream())
@@ -111,6 +108,7 @@ public class DashboardController {
             case "payments" -> paymentService.getAllPayments();
             case "invoices" -> invoiceService.getAllInvoices();
             case "projects" -> projectService.getAllProjects();
+            case "offers" -> offersService.getAllOffers();
             case "tasks" -> taskService.getAllTasks();
             default -> throw new IllegalArgumentException("Unknown type: " + type);
         };
@@ -141,6 +139,10 @@ public class DashboardController {
                 var invoice = invoiceService.getInvoiceById(id);
                 data.put("invoice", invoice);
                 data.put("discountedAmount", invoiceService.calculateDiscountedAmount(invoice));
+            }
+            case "offers" -> {
+                var offers = offersService.getOfferById(id);
+                data.put("offers", offers);
             }
             case "project" -> {
                 var project = projectService.getProjectById(id);

@@ -25,7 +25,7 @@
         </div>
         <div class="card" th:onclick="'window.location.href=\'/dashboard/list/invoices\''">
             <h3>Total Invoices</h3>
-            <p th:text="${data.totalInvoiceAmount}"></p>
+            <p th:text="${data.totalInvoices}"></p>
         </div>
         <div class="card" th:onclick="'window.location.href=\'/dashboard/list/payments\''">
             <h3>Total Payments</h3>
@@ -130,14 +130,17 @@
     new Chart(document.getElementById('taskProgressChart'), {
         type: 'doughnut',
         data: {
-            labels: ['Closed', 'In Progress', 'Open'], // Labels corrects
+            labels: ['Closed', 'In Progress', 'Open', 'Pending', 'Blocked', 'Waiting Client'], // Labels corrects
             datasets: [{
                 data: [
                     dashboardData.tasks.filter(t => t.status?.title.toLowerCase() === 'closed').length, // Closed
                     dashboardData.tasks.filter(t => t.status?.title.toLowerCase() === 'in-progress').length, // In Progress
-                    dashboardData.tasks.filter(t => t.status?.title.toLowerCase() === 'open').length // Open
+                    dashboardData.tasks.filter(t => t.status?.title.toLowerCase() === 'open').length, // Open
+                    dashboardData.tasks.filter(t => t.status?.title.toLowerCase() === 'pending').length,
+                    dashboardData.tasks.filter(t => t.status?.title.toLowerCase() === 'blocked').length,
+                    dashboardData.tasks.filter(t => t.status?.title.toLowerCase() === 'waiting client').length
                 ],
-                backgroundColor: ['#4BC0C0', '#36A2EB', '#FF6384']
+                backgroundColor: ['#4BC0C0', '#36A2EB', '#FF6384', '#FFCE56', '#9966FF', '#FF9F40'] // Ajoute d'autres couleurs si besoin
             }]
         },
         options: {
