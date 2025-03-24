@@ -9,8 +9,8 @@ public class HomeController {
 
     @GetMapping("/")
     public String home(Model model) {
-        model.addAttribute("message", "Bienvenue sur la page d'accueil !");
-        return "home"; // Redirige vers home.html
+        //model.addAttribute("message", "Bienvenue sur la page d'accueil !");
+        return "login";
     }
 }
 
