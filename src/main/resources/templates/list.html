@@ -36,6 +36,34 @@
             </div>
         </div>
 
+        <!-- Projects List -->
+        <div th:if="${type == 'projects'}" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div th:each="project : ${items}" class="bg-blue-100 p-4 rounded-lg shadow">
+                <h3 class="text-lg font-semibold text-blue-900" th:text="${project.id}"></h3>
+                <h3 class="text-lg font-semibold text-blue-900" th:text="${project.title}"></h3>
+                <p class="text-gray-700" th:text="'Client: ' + ${project.client.company_name}"></p>
+                <p class="text-gray-600" th:text="'Deadline: ' + ${project.deadline}"></p>
+                <a th:href="@{/dashboard/details/project/{id}(id=${project.id})}"
+                   class="block text-center bg-blue-600 text-white px-4 py-2 mt-2 rounded hover:bg-blue-700">
+                    View Details
+                </a>
+            </div>
+        </div>
+
+        <!-- Tasks List -->
+        <div th:if="${type == 'tasks'}" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div th:each="task : ${items}" class="bg-yellow-100 p-4 rounded-lg shadow">
+                <h3 class="text-lg font-semibold text-yellow-900" th:text="${task.title}"></h3>
+                <p class="text-gray-700" th:text="'Project: ' + ${task.project != null ? task.project.title : 'No project'}"></p>
+                <p class="text-gray-600" th:text="'Status: ' + ${task.status.title}"></p>
+                <p class="text-gray-600" th:text="'Deadline: ' + ${task.deadline}"></p>
+                <a th:href="@{/dashboard/details/task/{id}(id=${task.id})}"
+                   class="block text-center bg-yellow-600 text-white px-4 py-2 mt-2 rounded hover:bg-yellow-700">
+                    View Details
+                </a>
+            </div>
+        </div>
+
         <!-- Invoices List -->
         <div th:if="${type == 'invoices'}" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             <div th:each="invoice : ${items}" class="bg-yellow-100 p-4 rounded-lg shadow">
