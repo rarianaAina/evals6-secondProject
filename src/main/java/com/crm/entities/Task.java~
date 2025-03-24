@@ -1,0 +1,29 @@
+package com.dashboard.model;
+
+import lombok.Data;
+import java.time.LocalDateTime;
+
+@Data
+public class Task {
+    private Long id;
+    private String title;
+    private String description;
+    private String externalId;
+    private Long statusId;
+    private Long userAssignedId;
+    private Long userCreatedId;
+    private Long clientId;
+    private LocalDateTime deadline;
+    private Long projectId;
+    
+    private Project project;
+    private Client client;
+    private User creator;
+    private User assignee;
+    private Status status;
+    private Invoice invoice;
+    
+    public boolean isClosed() {
+        return status != null && "closed".equals(status.getTitle());
+    }
+}

@@ -1,0 +1,10 @@
+package com.crm.entities;
+
+import lombok.Data;
+
+@Data
+public class Status {
+    private Long id;
+    private String title;
+    private String color;
+}

@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>List View</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 p-6">
+
+<div class="max-w-5xl mx-auto bg-white p-6 rounded-lg shadow-lg">
+    <h1 class="text-2xl font-bold text-gray-800 mb-4" th:text="${#strings.capitalize(type)} + ' List'"></h1>
+
+    <div class="grid gap-6">
+        <!-- Clients List -->
+        <div th:if="${type == 'clients'}" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div th:each="client : ${items}" class="bg-blue-100 p-4 rounded-lg shadow">
+                <h3 class="text-lg font-semibold text-blue-900" th:text="${client.company_name}"></h3>
+                <p class="text-gray-700" th:text="${client.name}"></p>
+                <p class="text-gray-600" th:text="${client.email}"></p>
+                <a th:href="@{/dashboard/details/client/{id}(id=${client.id})}"
+                   class="block text-center bg-blue-600 text-white px-4 py-2 mt-2 rounded hover:bg-blue-700">
+                    View Details
+                </a>
+            </div>
+        </div>
+
+        <!-- Payments List -->
+        <div th:if="${type == 'payments'}" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div th:each="payment : ${items}" class="bg-green-100 p-4 rounded-lg shadow">
+                <h3 class="text-lg font-semibold text-green-900" th:text="'Payment #' + ${payment.id}"></h3>
+                <p class="text-gray-700" th:text="'Amount: ' + ${payment.amount}"></p>
+                <p class="text-gray-600" th:text="'Date: ' + ${payment.payment_date}"></p>
+                <a th:href="@{/dashboard/details/payment/{id}(id=${payment.id})}"
+                   class="block text-center bg-green-600 text-white px-4 py-2 mt-2 rounded hover:bg-green-700">
+                    View Details
+                </a>
+            </div>
+        </div>
+
+        <!-- Projects List -->
+        <div th:if="${type == 'projects'}" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div th:each="project : ${items}" class="bg-blue-100 p-4 rounded-lg shadow">
+                <h3 class="text-lg font-semibold text-blue-900" th:text="${project.id}"></h3>
+                <h3 class="text-lg font-semibold text-blue-900" th:text="${project.title}"></h3>
+                <p class="text-gray-700" th:text="'Client: ' + ${project.client.company_name}"></p>
+                <p class="text-gray-600" th:text="'Deadline: ' + ${project.deadline}"></p>
+                <a th:href="@{/dashboard/details/project/{id}(id=${project.id})}"
+                   class="block text-center bg-blue-600 text-white px-4 py-2 mt-2 rounded hover:bg-blue-700">
+                    View Details
+                </a>
+            </div>
+        </div>
+
+        <!-- Tasks List -->
+        <div th:if="${type == 'tasks'}" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div th:each="task : ${items}" class="bg-yellow-100 p-4 rounded-lg shadow">
+                <h3 class="text-lg font-semibold text-yellow-900" th:text="${task.title}"></h3>
+                <p class="text-gray-700" th:text="'Project: ' + ${task.project != null ? task.project.title : 'No project'}"></p>
+                <p class="text-gray-600" th:text="'Status: ' + ${task.status.title}"></p>
+                <p class="text-gray-600" th:text="'Deadline: ' + ${task.deadline}"></p>
+                <a th:href="@{/dashboard/details/task/{id}(id=${task.id})}"
+                   class="block text-center bg-yellow-600 text-white px-4 py-2 mt-2 rounded hover:bg-yellow-700">
+                    View Details
+                </a>
+            </div>
+        </div>
+
+        <!-- Offers List -->
+        <div th:if="${type == 'offers'}" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div th:each="offer : ${items}" class="bg-blue-100 p-4 rounded-lg shadow">
+                <h3 class="text-lg font-semibold text-blue-900" th:text="'Offer #' + ${offer.id}"></h3>
+                <p class="text-gray-700" th:text="'Status: ' + (${offer.status == 'won' ? 'Gagné' : 'En cours'})"></p>
+                <p class="text-gray-600" th:text="'Sent At: ' + ${offer.created_at}"></p>
+                <p class="text-gray-600" th:text="'Due At: ' + ${offer.due_at}"></p>
+                <a th:href="@{/dashboard/details/offers/{id}(id=${offer.id})}"
+                   class="block text-center bg-blue-600 text-white px-4 py-2 mt-2 rounded hover:bg-blue-700">
+                    View Details
+                </a>
+            </div>
+        </div>
+
+        <!-- Invoices List -->
+        <div th:if="${type == 'invoices'}" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div th:each="invoice : ${items}" class="bg-yellow-100 p-4 rounded-lg shadow">
+                <h3 class="text-lg font-semibold text-yellow-900" th:text="'Invoice: ' + ${invoice.id}"></h3>
+                <p class="text-gray-700">Status:
+                    <span th:text="${invoice.status == 'paid' ? 'Payé' : 'Pas encore payé'}"
+                          class="font-bold"
+                          th:classappend="${invoice.status == 'paid' ? 'text-green-700' : 'text-red-700'}">
+                    </span>
+                </p>
+                <p class="text-gray-600" th:text="'Due Date: ' + ${invoice.due_at}"></p>
+                <a th:href="@{/dashboard/details/invoice/{id}(id=${invoice.id})}"
+                   class="block text-center bg-yellow-600 text-white px-4 py-2 mt-2 rounded hover:bg-yellow-700">
+                    View Details
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <a href="/dashboard"
+       class="mt-6 inline-block bg-gray-500 text-white px-6 py-2 rounded-lg hover:bg-gray-700">
+        Back to Dashboard
+    </a>
+</div>
+
+</body>
+</html>

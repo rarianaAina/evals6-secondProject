@@ -1,0 +1,28 @@
+package com.dashboard.model;
+
+import lombok.Data;
+import java.time.LocalDateTime;
+import java.util.List;
+
+@Data
+public class Offer {
+    private Long id;
+    private String externalId;
+    private LocalDateTime sentAt;
+    private String status;
+    private LocalDateTime dueAt;
+    private Long clientId;
+    private String sourceId;
+    private String sourceType;
+    
+    private List<InvoiceLine> invoiceLines;
+    private Invoice invoice;
+    
+    public void setAsWon() {
+        this.status = "won";
+    }
+    
+    public void setAsLost() {
+        this.status = "lost";
+    }
+}

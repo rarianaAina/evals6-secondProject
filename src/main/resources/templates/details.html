@@ -21,9 +21,176 @@
                 <h3>Related Invoices</h3>
                 <div class="data-grid">
                     <div th:each="invoice : ${data.client.invoices}" class="data-card">
-                        <p>Invoice #<span th:text="${invoice.id}"></span></p>
-                        <p>Status: <span th:text="${invoice.status}"></span></p>
-                        <p>Due Date: <span th:text="${invoice.dueAt}"></span></p>
+                        <p>Invoice ID: <span th:text="${invoice.id}"></span></p>
+                        <p>Status:
+                            <span th:text="${invoice.status == 'paid' ? 'Payé' : 'Pas encore payé'}"></span>
+                        </p>
+                        <p>Due Date: <span th:text="${invoice.due_at}"></span></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Project Details -->
+        <div th:if="${type == 'project'}" class="project-details">
+            <h2 th:text="${data.project.title}"></h2>
+            <p th:utext="${data.project.description}"></p>
+
+<!--
+            <div class="info-group">
+                <label>External ID:</label>
+                <span th:text="${data.project.externalId}"></span>
+            </div>
+-->
+
+            <div class="info-group">
+                <label>Status:</label>
+                <span th:text="${data.project.status.title}"></span>
+            </div>
+
+            <div class="info-group">
+                <label>Assigned to:</label>
+                <span th:text="${data.project.assignee != null ? data.project.assignee.name : 'Unassigned'}"></span>
+            </div>
+
+            <div class="info-group">
+                <label>Created by:</label>
+                <span th:text="${data.project.creator.name}"></span>
+            </div>
+
+            <div class="info-group">
+                <label>Client:</label>
+                <span th:text="${data.project.client.company_name != null ? data.project.client.company_name : 'No client'}"></span>
+            </div>
+
+            <div class="info-group">
+                <label>Deadline:</label>
+                <span th:text="${data.project.deadline}"></span>
+            </div>
+
+            <div th:if="${data.project.tasks}" class="related-data">
+                <h3>Tasks</h3>
+                <div class="data-grid">
+                    <div th:each="task : ${data.project.tasks}" class="data-card">
+                        <p>Task: <span th:text="${task.name}"></span></p>
+                        <p>Status:
+                            <span th:text="${task.completed ? 'Completed' : 'Pending'}"></span>
+                        </p>
+                        <p>Due Date: <span th:text="${task.due_date}"></span></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Task Details -->
+        <div th:if="${type == 'task'}" class="task-details">
+            <h2 th:text="${data.task.title}"></h2>
+            <p th:utext="${data.task.description}"></p>
+
+<!--
+            <div class="info-group">
+                <label>External ID:</label>
+                <span th:text="${data.task.externalId}"></span>
+            </div>
+-->
+
+            <div class="info-group">
+                <label>Status:</label>
+                <span th:text="${data.task.status.title}"></span>
+            </div>
+
+            <div class="info-group">
+                <label>Project:</label>
+                <span th:text="${data.task.project != null ? data.task.project.title : 'No project'}"></span>
+            </div>
+
+            <div class="info-group">
+                <label>Assigned to:</label>
+                <span th:text="${data.task.assignee != null ? data.task.assignee.name : 'Unassigned'}"></span>
+            </div>
+
+            <div class="info-group">
+                <label>Created by:</label>
+                <span th:text="${data.task.creator.name}"></span>
+            </div>
+
+            <div class="info-group">
+                <label>Client:</label>
+                <span th:text="${data.task.client != null ? data.task.client.name : 'No client'}"></span>
+            </div>
+
+            <div class="info-group">
+                <label>Deadline:</label>
+                <span th:text="${data.task.deadline}"></span>
+            </div>
+
+            <div th:if="${data.task.invoice}" class="related-data">
+                <h3>Linked Invoice</h3>
+                <div class="data-grid">
+                    <div class="data-card">
+                        <p>Invoice ID: <span th:text="${data.task.invoice.id}"></span></p>
+                        <p>Status: <span th:text="${data.task.invoice.status}"></span></p>
+                        <p>Due Date: <span th:text="${data.task.invoice.due_at}"></span></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Offer Details -->
+        <div th:if="${type == 'offers'}" class="offer-details">
+            <h2 th:text="'Offer ' + ${data.offers.id}"></h2>
+
+<!--
+            <div class="info-group">
+                <label>External ID:</label>
+                <span th:text="${data.offers.externalId}"></span>
+            </div>
+-->
+
+            <div class="info-group">
+                <label>Status:</label>
+                <span th:text="${data.offers.status != null and data.offers.status == 'won' ? 'Gagné' : 'En cours'}"></span>
+            </div>
+
+            <div class="info-group">
+                <label>Sent At:</label>
+                <span th:text="${data.offers.created_at}"></span>
+            </div>
+
+            <div class="info-group">
+                <label>Due At:</label>
+                <span th:text="${data.offers.due_at}"></span>
+            </div>
+
+<!--
+            <div class="info-group">
+                <label>Source ID:</label>
+                <span th:text="${data.offers.source_id}"></span>
+            </div>
+
+            <div class="info-group">
+                <label>Source Type:</label>
+                <span th:text="${data.offers.source_type}"></span>
+            </div>
+-->
+
+            <div th:if="${data.offers.invoice}" class="related-data">
+                <h3>Linked Invoice</h3>
+                <div class="data-grid">
+                    <div class="data-card">
+                        <p>Invoice ID: <span th:text="${data.offers.invoice.id}"></span></p>
+                        <p>Status: <span th:text="${data.offers.invoice.status != null and data.offers.invoice.status == 'paid' ? 'Payé' : 'Non payé'}"></span></p>
+                        <p>Due Date: <span th:text="${data.offers.invoice.due_at}"></span></p>
+                    </div>
+                </div>
+            </div>
+
+            <div th:if="${data.offers.invoiceLines}" class="related-data">
+                <h3>Invoice Lines</h3>
+                <div class="data-grid">
+                    <div th:each="line : ${data.offers.invoiceLines}" class="data-card">
+                        <p>Description: <span th:text="${line.description}"></span></p>
+                        <p>Amount: <span th:text="${line.amount}"></span></p>
                     </div>
                 </div>
             </div>
@@ -33,12 +200,16 @@
         <div th:if="${type == 'payment'}" class="payment-details">
             <h2>Payment Details</h2>
             <div class="info-group">
+                <label>Client:</label>
+                <span th:text="${data.clientName}"></span>
+            </div>
+            <div class="info-group">
                 <label>Amount:</label>
                 <span th:text="${data.payment.amount}"></span>
             </div>
             <div class="info-group">
                 <label>Date:</label>
-                <span th:text="${data.payment.paymentDate}"></span>
+                <span th:text="${data.payment.payment_date}"></span>
             </div>
             <div class="info-group">
                 <label>Description:</label>
@@ -66,15 +237,15 @@
             <h2>Invoice Details</h2>
             <div class="info-group">
                 <label>Status:</label>
-                <span th:text="${data.invoice.status}"></span>
+                <span th:text="${data.invoice.status != null and data.invoice.status == 'paid' ? 'Payé' : 'Non payé'}"></span>
             </div>
             <div class="info-group">
                 <label>Due Date:</label>
-                <span th:text="${data.invoice.dueAt}"></span>
+                <span th:text="${data.invoice.due_at}"></span>
             </div>
             <div class="info-group">
                 <label>Original Amount:</label>
-                <span th:text="${data.invoice.invoiceLines.![amount].sum()}"></span>
+                <span th:text="${#aggregates.sum(data.invoice.invoiceLines.![amount])}"></span>
             </div>
             <div class="info-group">
                 <label>Discounted Amount:</label>
