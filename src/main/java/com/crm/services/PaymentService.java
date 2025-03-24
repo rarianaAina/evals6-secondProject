@@ -7,10 +7,14 @@ import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import java.math.BigDecimal;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.time.LocalDateTime;
 
 @Service
 public class PaymentService extends BaseApiService {
+
+    private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
     public PaymentService(
             RestTemplate restTemplate,
@@ -27,14 +31,22 @@ public class PaymentService extends BaseApiService {
     }
 
     public void updatePaymentAmount(Long paymentId, BigDecimal newAmount) {
+        System.out.println("Update");
         Payment payment = new Payment();
         payment.setId(paymentId);
         payment.setAmount(newAmount);
-
+        setFormattedDate(payment);
         restTemplate.put(apiUrl + "/payments/" + paymentId, payment);
     }
 
     public void deletePayment(Long paymentId) {
+        System.out.println("Delete");
         restTemplate.delete(apiUrl + "/payments/" + paymentId);
+    }
+
+    public void setFormattedDate(Payment payment) {
+
+        LocalDateTime now = LocalDateTime.now();
+        payment.setPayment_date(now.format(FORMATTER)); // Convertir en format lisible
     }
 }

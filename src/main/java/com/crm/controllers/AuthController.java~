@@ -31,7 +31,7 @@ public class AuthController {
         if (response.getStatusCode().is2xxSuccessful()) {
             model.addAttribute("user", email);
             model.addAttribute("token", response.getBody());  // Stocke le token pour l'utiliser
-            return "redirect:/dashboard";  // Si la connexion est réussie, redirige vers la page 'success'
+            return "success";  // Si la connexion est réussie, redirige vers la page 'success'
         }
         // Si la réponse est 401 Unauthorized, cela signifie que les identifiants sont incorrects
         else if (response.getStatusCode() == HttpStatus.UNAUTHORIZED) {

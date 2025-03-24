@@ -29,7 +29,7 @@
         </div>
         <div class="card" th:onclick="'window.location.href=\'/dashboard/list/payments\''">
             <h3>Total Payments</h3>
-            <p th:text="${#numbers.formatDecimal(data.totalPaymentAmount, 1, 'POINT', 2, 'COMMA')}"></p>
+            <p th:text="${#numbers.formatDecimal(data.totalPaymentAmount / 100, 1, 'POINT', 2, 'COMMA')}"></p>
         </div>
         <div class="card" th:onclick="'window.location.href=\'/dashboard/list/offers\''">
             <h3>Total Offers</h3>

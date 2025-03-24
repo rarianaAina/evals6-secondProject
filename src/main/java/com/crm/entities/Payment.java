@@ -11,7 +11,7 @@ public class Payment {
     private String description;
     private BigDecimal amount;
     private String paymentSource;
-    private LocalDateTime payment_date;
+    private String payment_date;
     private String integrationPaymentId;
     private String integrationType;
     private Long invoiceId;

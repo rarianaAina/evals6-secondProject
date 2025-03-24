@@ -162,15 +162,19 @@ public class DashboardController {
 
     @PostMapping("/payment/{id}")
     public String updatePayment(@PathVariable Long id, @RequestParam BigDecimal amount) {
-        paymentService.updatePaymentAmount(id, amount);
+        System.out.println("update");
+        BigDecimal amountFinal = amount.multiply(BigDecimal.valueOf(100));
+        paymentService.updatePaymentAmount(id, amountFinal);
         return "redirect:/dashboard/details/payment/" + id;
     }
 
-    @DeleteMapping("/payment/{id}")
+    @GetMapping("/payment/delete/{id}")
     public String deletePayment(@PathVariable Long id) {
+        System.out.println("Test");
         paymentService.deletePayment(id);
         return "redirect:/dashboard/list/payments";
     }
+
 
     @PostMapping("/settings/discount")
     public String updateGlobalDiscountRate(@RequestParam Double rate) {
