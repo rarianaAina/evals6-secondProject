@@ -64,6 +64,20 @@
             </div>
         </div>
 
+        <!-- Offers List -->
+        <div th:if="${type == 'offers'}" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div th:each="offer : ${items}" class="bg-blue-100 p-4 rounded-lg shadow">
+                <h3 class="text-lg font-semibold text-blue-900" th:text="'Offer #' + ${offer.id}"></h3>
+                <p class="text-gray-700" th:text="'Status: ' + (${offer.status == 'won' ? 'Gagné' : 'En cours'})"></p>
+                <p class="text-gray-600" th:text="'Sent At: ' + ${offer.created_at}"></p>
+                <p class="text-gray-600" th:text="'Due At: ' + ${offer.due_at}"></p>
+                <a th:href="@{/dashboard/details/offers/{id}(id=${offer.id})}"
+                   class="block text-center bg-blue-600 text-white px-4 py-2 mt-2 rounded hover:bg-blue-700">
+                    View Details
+                </a>
+            </div>
+        </div>
+
         <!-- Invoices List -->
         <div th:if="${type == 'invoices'}" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             <div th:each="invoice : ${items}" class="bg-yellow-100 p-4 rounded-lg shadow">
